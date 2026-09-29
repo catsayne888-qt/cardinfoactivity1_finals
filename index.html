@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generate a Card</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inria+Serif:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --page: #ffe9e6;
+        --cream: #fff6e0;
+        --cream-border: #f2c6a5;
+        --field: #f9d9be;
+        --field-border: #efb994;
+        --area: #ffe4cf;
+        --accent: #d18f7b;
+        --accent-dark: #bd7a66;
+        --ink: #2b2320;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--page);
+        color: var(--ink);
+        font-family: "Inria Serif", Georgia, serif;
+        font-size: 14px;
+      }
+
+      .page {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 40px 20px 50px;
+      }
+
+      /* ---------- FORM ---------- */
+      .title {
+        margin: 0 0 30px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .card-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        padding: 25px 25px 30px;
+        background: var(--cream);
+        border: 1px solid var(--cream-border);
+      }
+
+      .form-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+
+      .form-group label {
+        flex: 0 0 90px;
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      .form-group input {
+        flex: 1;
+        min-width: 0;
+        height: 28px;
+        padding: 0 8px;
+        background: var(--field);
+        border: 1px solid var(--field-border);
+        border-radius: 5px;
+        font: inherit;
+      }
+
+      .info-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 12px;
+        margin-bottom: 12px;
+        font-size: 13px;
+      }
+
+      .info-row .label {
+        flex: 0 0 62px;
+        font-weight: 700;
+      }
+
+      .info-row label {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .info-row select {
+        height: 26px;
+        background: var(--field);
+        border: 1px solid var(--field-border);
+        border-radius: 4px;
+        font: inherit;
+      }
+
+      .right-column .info-row:first-child {
+        flex-wrap: nowrap;
+        gap: 4px 8px;
+      }
+
+      .right-column .info-row:nth-child(3) {
+        gap: 6px 14px;
+      }
+
+      .right-column .info-row:nth-child(3) .label {
+        flex-basis: 100%;
+      }
+
+      .info-row input[type="radio"],
+      .info-row input[type="checkbox"] {
+        width: 14px;
+        height: 14px;
+        margin: 0;
+        accent-color: var(--accent-dark);
+      }
+
+      .form-other {
+        margin-top: 18px;
+      }
+
+      .form-other label {
+        display: block;
+        margin-bottom: 4px;
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      .form-other textarea {
+        display: block;
+        width: 100%;
+        height: 110px;
+        padding: 8px;
+        background: var(--area);
+        border: 1px solid var(--field-border);
+        font: inherit;
+        resize: none;
+      }
+
+      ::placeholder {
+        color: #a48674;
+        font-size: 11px;
+        opacity: 1;
+      }
+
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent-dark);
+        outline-offset: 2px;
+      }
+
+      .bottom-section {
+        margin-top: 22px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 14px 14px;
+      }
+
+      .bottom-section p {
+        flex: 1 1 auto;
+        margin: 0;
+        text-align: right;
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      .btn {
+        flex: 0 0 auto;
+        min-width: 90px;
+        height: 32px;
+        padding: 0 14px;
+        border: none;
+        border-radius: 5px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      .btn-primary:hover {
+        background: var(--accent-dark);
+      }
+
+      .btn-secondary {
+        background: var(--cream);
+        color: var(--ink);
+      }
+
+      .btn-secondary:hover {
+        background: #ffedc4;
+      }
+
+      /* ---------- OUTPUT CARD ---------- */
+      .card-title {
+        margin: 34px 0 10px;
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .card-line {
+        border: 0;
+        border-top: 1px solid var(--accent);
+        margin: 0 0 14px;
+      }
+
+      .card-body {
+        display: flex;
+        gap: 6px;
+      }
+
+      .info {
+        flex: 1;
+        min-width: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        min-height: 195px;
+        padding: 20px 22px;
+        background: var(--cream);
+        border: 1px solid #ecd9b8;
+        font-size: 12px;
+      }
+
+      .info p {
+        margin: 0 0 9px;
+        overflow-wrap: anywhere;
+      }
+
+      .info strong {
+        text-transform: uppercase;
+      }
+
+      .info .gap {
+        margin-top: 22px;
+      }
+
+      .info .other-info {
+        margin-top: 22px;
+        overflow-wrap: anywhere;
+      }
+
+      .info .other-info span {
+        white-space: pre-wrap;
+      }
+
+      .photo {
+        position: relative;
+        flex: 0 0 148px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #8a7f78;
+        background: #fff;
+        color: #7a6f68;
+        font-size: 12px;
+        text-align: center;
+        overflow: hidden;
+      }
+
+      .photo img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .card-line-bottom {
+        border: 0;
+        border-top: 1px solid var(--accent);
+        margin: 20px 0 0;
+      }
+
+      /* ---------- FOOTER ---------- */
+      .footer-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 38px;
+        background: var(--accent);
+      }
+
+      .footer-bar p {
+        margin: 0;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+
+      /* ---------- MOBILE ---------- */
+      @media (max-width: 620px) {
+        .card-info,
+        .info {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .card-body {
+          flex-direction: column;
+        }
+
+        .photo {
+          flex-basis: auto;
+          height: 220px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="page">
+      <h1 class="title">GENERATE A USER INFO CARD</h1>
+
+      <form id="card-form" class="card-info">
+        <!-- LEFT SIDE -->
+        <div class="left-column">
+          <div class="form-group">
+            <label for="name">FULL NAME</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              autocomplete="name"
+              placeholder="Enter your full name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="birthday">BIRTHDAY</label>
+            <input type="date" id="birthday" name="birthday" />
+          </div>
+
+          <div class="form-group">
+            <label for="age">AGE</label>
+            <input
+              type="number"
+              id="age"
+              name="age"
+              min="0"
+              max="130"
+              placeholder="Enter your age"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="address">ADDRESS</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              autocomplete="street-address"
+              placeholder="Enter your address"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">EMAIL</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              autocomplete="email"
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">PHONE NO</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              autocomplete="tel"
+              placeholder="Enter your phone number"
+            />
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="right-column">
+          <div class="info-row">
+            <span class="label">GENDER</span>
+            <label
+              ><input type="radio" name="gender" value="Male" /> Male</label
+            >
+            <label
+              ><input type="radio" name="gender" value="Female" /> Female</label
+            >
+            <label
+              ><input type="radio" name="gender" value="Others" /> Other</label
+            >
+          </div>
+
+          <div class="info-row">
+            <label class="label" for="mbti">MBTI</label>
+            <select id="mbti" name="mbti">
+              <option value="">Choose</option>
+              <option>ISTJ</option>
+              <option>ISFJ</option>
+              <option>INFJ</option>
+              <option>INTJ</option>
+              <option>ISTP</option>
+              <option>ISFP</option>
+              <option>INFP</option>
+              <option>INTP</option>
+              <option>ESTP</option>
+              <option>ESFP</option>
+              <option>ENFP</option>
+              <option>ENTP</option>
+              <option>ESTJ</option>
+              <option>ESFJ</option>
+              <option>ENFJ</option>
+              <option>ENTJ</option>
+            </select>
+          </div>
+
+          <div class="info-row">
+            <span class="label">FAVOURITE COLOR</span>
+            <label
+              ><input type="checkbox" name="color" value="Red" /> Red</label
+            >
+            <label
+              ><input type="checkbox" name="color" value="Blue" /> Blue</label
+            >
+            <label
+              ><input type="checkbox" name="color" value="Yellow" />
+              Yellow</label
+            >
+            <label
+              ><input type="checkbox" name="color" value="Green" /> Green</label
+            >
+          </div>
+
+          <div class="form-other">
+            <label for="other">Other Info:</label>
+            <textarea
+              id="other"
+              name="other"
+              placeholder="Enter any other information"
+            ></textarea>
+          </div>
+        </div>
+      </form>
+
+      <div class="bottom-section">
+        <p id="status" role="status" aria-live="polite">
+          please input your information &gt;_&lt;
+        </p>
+        <button class="btn btn-primary" type="submit" form="card-form">
+          show my info
+        </button>
+        <button class="btn btn-secondary" type="reset" form="card-form">
+          reset
+        </button>
+      </div>
+
+      <h2 class="card-title">User Information Card</h2>
+      <hr class="card-line" />
+
+      <div class="card-body">
+        <div class="info">
+          <div class="left">
+            <p><strong>Full Name:</strong> <span id="out-name"></span></p>
+            <p><strong>Birthday:</strong> <span id="out-birthday"></span></p>
+            <p><strong>Age:</strong> <span id="out-age"></span></p>
+            <p><strong>Address:</strong> <span id="out-address"></span></p>
+            <p class="gap">
+              <strong>Email:</strong> <span id="out-email"></span>
+            </p>
+            <p><strong>Phone No:</strong> <span id="out-phone"></span></p>
+          </div>
+
+          <div class="right">
+            <p><strong>Gender:</strong> <span id="out-gender"></span></p>
+            <p><strong>MBTI:</strong> <span id="out-mbti"></span></p>
+            <p>
+              <strong>Favourite Color:</strong> <span id="out-color"></span>
+            </p>
+            <p class="other-info">
+              <strong>Other Info:</strong> <span id="out-other"></span>
+            </p>
+          </div>
+        </div>
+
+        <div class="photo">
+          <img
+            id="out-photo"
+            src="https://i.pinimg.com/736x/b4/f6/37/b4f637ece967640ce9f050e937e82168.jpg"
+            alt="Profile photo"
+            onerror="this.hidden = true"
+          />
+        </div>
+      </div>
+
+      <hr class="card-line-bottom" />
+    </main>
+
+    <div class="footer-bar">
+      <p>Aksayne Danciana Ramos &nbsp; 2IT-A &nbsp; Activity 1</p>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
