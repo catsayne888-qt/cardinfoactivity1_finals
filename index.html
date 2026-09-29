@@ -31,6 +31,9 @@
 
       body {
         margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
         background: var(--page);
         color: var(--ink);
         font-family: "Inria Serif", Georgia, serif;
@@ -38,6 +41,8 @@
       }
 
       .page {
+        flex: 1;
+        width: 100%;
         max-width: 640px;
         margin: 0 auto;
         padding: 40px 20px 50px;
@@ -306,6 +311,7 @@
         align-items: center;
         justify-content: center;
         height: 38px;
+        flex-shrink: 0;
         background: var(--accent);
       }
 
